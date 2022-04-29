@@ -1,0 +1,6 @@
+# Mac/OSX
+.DS_Store
+
+# Private Node Modules
+node_modules/
+creds.js
