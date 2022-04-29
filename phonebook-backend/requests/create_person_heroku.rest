@@ -1,0 +1,7 @@
+POST https://mern-phonebook-project.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Billy Hill",
+    "number": 228374
+}
