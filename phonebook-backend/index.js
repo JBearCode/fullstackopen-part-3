@@ -88,6 +88,22 @@ let persons = [
     })
   })
 
+   // converted to MongoDB
+  app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+  
+    const person = {
+      name: body.name,
+      number: body.number,
+    }
+  
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+      .then(updatedPerson => {
+        response.json(updatedPerson)
+      })
+      .catch(error => next(error))
+  })
+
   // unknown endpoint handler, loaded before only error handler
   const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })

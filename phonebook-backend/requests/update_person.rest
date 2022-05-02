@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/persons/626f964696d79c6c1d2accf3
+Content-Type: application/json
+
+{
+    "name": "Redgar the Ridiculous",
+    "number": "385729583"
+}
