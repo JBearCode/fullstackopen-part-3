@@ -42,14 +42,18 @@ let persons = [
     response.send('<h1>Hello there!</h1>')
   })
 
-  // converted to MongoDB
   app.get('/api/persons', (request, response) => {
     Person.find({}).then(person => {
       response.json(person)
     })
   })
 
-// converted to MongoDB
+  app.get('/info', (request, response) => {
+    Person.countDocuments({}).then(num => {
+      response.send(`<p>There are ${num} contacts in the database.</p><p>Timestamp: ${new Date()}</p>`)
+    })
+  })
+
   app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id).then(person => {
       if (person) {
@@ -61,7 +65,6 @@ let persons = [
     .catch(error => next(error))
   })
 
-  // converted to MongoDB
   app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
       .then(result => {
@@ -70,7 +73,6 @@ let persons = [
       .catch(error => next(error))
   })
 
-  // converted to MongoDB
   app.post('/api/persons', (request, response) => {
     const body = request.body
   
@@ -88,7 +90,6 @@ let persons = [
     })
   })
 
-   // converted to MongoDB
   app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
   
