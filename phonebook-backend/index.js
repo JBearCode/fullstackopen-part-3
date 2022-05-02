@@ -5,13 +5,13 @@ const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
+const { modelName } = require('./models/person')
 
 morgan.token('bodyContent', function (req, res) { return JSON.stringify(req.body) })
 
 app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
-app.use(morgan('tiny'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :bodyContent'))
 
 
@@ -42,13 +42,6 @@ let persons = [
     response.send('<h1>Hello there!</h1>')
   })
 
-  app.get('/info', (request, response) => {
-    const infoDiv = 
-        `<div><p>The API currently contains ${persons.length} contacts</p>
-        <p>Timestamp: ${new Date()}</p>`
-    response.send(infoDiv)
-  })
-
   // converted to MongoDB
   app.get('/api/persons', (request, response) => {
     Person.find({}).then(person => {
@@ -57,17 +50,24 @@ let persons = [
   })
 
 // converted to MongoDB
-  app.get('/api/persons/:id', (request, response) => {
+  app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id).then(person => {
-      response.json(person)
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
     })
+    .catch(error => next(error))
   })
 
-  app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(p => p.id !== id)
-  
-    response.status(204).end()
+  // converted to MongoDB
+  app.delete('/api/persons/:id', (request, response, next) => {
+    Person.findByIdAndRemove(request.params.id)
+      .then(result => {
+        response.status(204).end()
+      })
+      .catch(error => next(error))
   })
 
   // converted to MongoDB
@@ -87,6 +87,24 @@ let persons = [
       response.json(savedPerson)
     })
   })
+
+  // unknown endpoint handler, loaded before only error handler
+  const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  app.use(unknownEndpoint)
+
+  // error handler function, last loaded middleware
+  const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'issue with id format' })
+    } 
+  
+    next(error)
+  }
+  app.use(errorHandler)
   
   const PORT = process.env.PORT
   app.listen(PORT, () => {
