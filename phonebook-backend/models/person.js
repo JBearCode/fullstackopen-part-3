@@ -16,13 +16,20 @@ const personSchema = new mongoose.Schema({
     name: {
       type: String,
       minLength: [3, 'Please input a longer name'],
+      unique: true,
       required: true
     },
     number: {
       type: String,
       required: true,
-      minLength: [5, 'Please input at least 5 digits'],
-      maxLength: [10, 'Please use 10 digits or fewer']
+      minLength: [8, 'Please input at least 8 digits'],
+      maxLength: [12, 'Please input 12 digits or fewer'],
+      validate: {
+        validator: (v) => {
+          return /[0-9\-]{8,12}$/.test(v)
+        },
+        message: 'Please use only numbers or dashes'
+      }
     },
     date: {
       type: Date,

@@ -156,7 +156,7 @@ const Form = (props) => {
   return (
     <form onSubmit={props.addPerson}>
         <div>Name: <input type="text" value={props.newName} onChange={props.handleNameChange}/></div>
-        <div>Number: <input type="number" value={props.newNumber} onChange={props.handleNumberChange}/></div>
+        <div>Number: <input type="text" value={props.newNumber} onChange={props.handleNumberChange}/></div>
         <div>
         <button type="submit">Add</button>
         </div>
