@@ -39,6 +39,8 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-plugin-react": "^7.29.4",
     "json-server": "^0.17.0"
   }
 }
