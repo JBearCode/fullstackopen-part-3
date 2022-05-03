@@ -45,6 +45,7 @@ const App = () => {
             }, 5000)
           })
           .catch(errorMessage => {
+            console.log(errorMessage.response.data.error)
             setNotificationColor("red")
             setNotificationText(`Contact ${numberObject.name} has already been deleted from the server!`)
             setTimeout(() => {
@@ -65,11 +66,21 @@ const App = () => {
           setPersonsToDisplay(persons.concat(response.data))
           setPersons(persons.concat(response.data))        
       })
-      setNotificationColor("green")
-      setNotificationText(`Successfully created new contact ${numberObject.name}`)
-      setTimeout(() => {
-        setNotificationText(null)
-      }, 5000)    
+        .then(response => {
+          setNotificationColor("green")
+          setNotificationText(`Successfully created new contact ${numberObject.name}`)
+          setTimeout(() => {
+            setNotificationText(null)
+          }, 5000)    
+        })
+        .catch(error => {
+          setNotificationColor("red")
+          console.log(error.response.data.error)
+          setNotificationText(error.response.data.error) 
+          setTimeout(() => {
+            setNotificationText(null)
+          }, 5000)    
+        })
       setNewName('');
       setNewNumber('');
     }

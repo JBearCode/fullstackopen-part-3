@@ -13,8 +13,17 @@ mongoose.connect(url)
   })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+      type: String,
+      minLength: [3, 'Please input a longer name'],
+      required: true
+    },
+    number: {
+      type: String,
+      required: true,
+      minLength: [5, 'Please input at least 5 digits'],
+      maxLength: [10, 'Please use 10 digits or fewer']
+    },
     date: {
       type: Date,
       default: Date.now
